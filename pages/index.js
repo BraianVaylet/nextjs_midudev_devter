@@ -1,65 +1,72 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React, { useState, useEffect } from "react"
+import Button from "@/components/Button"
+import GitHub from "@/components/Icons/GitHub"
+import { colors } from "@/styles/theme"
+import { loginWithGitHub, onAuthStateChanged } from "../firebase/client"
 
-export default function Home() {
+const Home = () => {
+  // hooks
+  const [user, setUser] = useState(null)
+
+  useEffect(() => onAuthStateChanged(setUser), [])
+  console.log("user", user)
+
+  // handle functions
+  const handleClick = () => loginWithGitHub().then((user) => setUser(user))
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+    <>
+      <section>
+        <img src="/devter-logo.png" alt="logo" />
+        <h1>Devter</h1>
+        <h2>Talk about development with developers 💻</h2>
+        <div>
+          {user === null && (
+            <Button onClick={() => handleClick()}>
+              <GitHub width={24} height={24} fill="#fff" />
+              <span>Login with GitHub</span>
+            </Button>
+          )}
+          {user && user.avatar && (
+            <div>
+              <img src={user.avatar} />
+              <strong>{user.username}</strong>
+            </div>
+          )}
         </div>
-      </main>
+      </section>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
+      <style jsx>{`
+        section {
+          height: 100%;
+          display: grid;
+          place-content: center;
+          place-items: center;
+        }
+
+        div {
+          margin-top: 16px;
+        }
+
+        img {
+          width: 120px;
+        }
+
+        h1 {
+          font-weight: 800;
+          color: ${colors.primary};
+          margin-bottom: 0;
+        }
+
+        h2 {
+          width: 75%;
+          font-size: 21px;
+          color: ${colors.secondary};
+          margin: 0;
+        }
+      `}</style>
+    </>
   )
 }
+
+export default Home
