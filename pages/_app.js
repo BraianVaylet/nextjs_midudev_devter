@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import AppLayout from "@/components/AppLayout"
+import AppLayout from "components/AppLayout"
 import Head from "next/head"
 
 const MyApp = ({ Component, pageProps }) => {
@@ -18,8 +18,8 @@ const MyApp = ({ Component, pageProps }) => {
 }
 
 MyApp.propTypes = {
-  Component: PropTypes.element,
-  pageProps: PropTypes.object,
+  Component: PropTypes.any,
+  pageProps: PropTypes.any,
 }
 
 export default MyApp

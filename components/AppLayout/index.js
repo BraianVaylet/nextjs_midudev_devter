@@ -1,13 +1,12 @@
-import React from "react"
 import styles, { globalStyles } from "./styles"
+import PropTypes from "prop-types"
 
-const index = ({ children }) => {
+export default function AppLayout({ children }) {
   return (
     <>
       <div>
         <main>{children}</main>
       </div>
-
       <style jsx>{styles}</style>
       <style jsx global>
         {globalStyles}
@@ -16,4 +15,6 @@ const index = ({ children }) => {
   )
 }
 
-export default index
+AppLayout.propTypes = {
+  children: PropTypes.any,
+}

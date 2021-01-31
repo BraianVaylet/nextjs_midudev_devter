@@ -1,72 +1,90 @@
-import React, { useState, useEffect } from "react"
-import Button from "@/components/Button"
-import GitHub from "@/components/Icons/GitHub"
-import { colors } from "@/styles/theme"
-import { loginWithGitHub, onAuthStateChanged } from "../firebase/client"
+import { useEffect } from "react"
+import Head from "next/head"
 
-const Home = () => {
-  // hooks
-  const [user, setUser] = useState(null)
+import AppLayout from "components/AppLayout"
+import Button from "components/Button"
+import GitHub from "components/Icons/GitHub"
+import Logo from "components/Icons/Logo"
 
-  useEffect(() => onAuthStateChanged(setUser), [])
-  console.log("user", user)
+import { colors } from "styles/theme"
 
-  // handle functions
-  const handleClick = () => loginWithGitHub().then((user) => setUser(user))
+import { loginWithGitHub } from "firebase/client"
+
+import { useRouter } from "next/router"
+import useUser, { USER_STATES } from "hooks/useUser"
+
+export default function Home() {
+  const user = useUser()
+  const router = useRouter()
+
+  useEffect(() => {
+    user && router.replace("/home")
+  }, [user])
+
+  const handleClick = () => {
+    loginWithGitHub().catch((err) => {
+      console.log(err)
+    })
+  }
 
   return (
     <>
-      <section>
-        <img src="/devter-logo.png" alt="logo" />
-        <h1>Devter</h1>
-        <h2>Talk about development with developers 💻</h2>
-        <div>
-          {user === null && (
-            <Button onClick={() => handleClick()}>
-              <GitHub width={24} height={24} fill="#fff" />
-              <span>Login with GitHub</span>
-            </Button>
-          )}
-          {user && user.avatar && (
-            <div>
-              <img src={user.avatar} />
-              <strong>{user.username}</strong>
-            </div>
-          )}
-        </div>
-      </section>
+      <Head>
+        <title>devter 🐦</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <AppLayout>
+        <section>
+          <Logo width="100" />
+          <h1>Devter</h1>
+          <h2>
+            Talk about development
+            <br />
+            with developers 👩‍💻👨‍💻
+          </h2>
+
+          <div>
+            {user === USER_STATES.NOT_LOGGED && (
+              <Button onClick={handleClick}>
+                <GitHub fill="#fff" width={24} height={24} />
+                Login with GitHub
+              </Button>
+            )}
+            {user === USER_STATES.NOT_KNOWN && <img src="/spinner.gif" />}
+          </div>
+        </section>
+      </AppLayout>
 
       <style jsx>{`
-        section {
-          height: 100%;
-          display: grid;
-          place-content: center;
-          place-items: center;
+        img {
+          width: 120px;
         }
 
         div {
           margin-top: 16px;
         }
 
-        img {
-          width: 120px;
+        section {
+          display: grid;
+          height: 100%;
+          place-content: center;
+          place-items: center;
         }
 
         h1 {
-          font-weight: 800;
           color: ${colors.primary};
-          margin-bottom: 0;
+          font-weight: 800;
+          font-size: 32px;
+          margin-bottom: 16px;
         }
 
         h2 {
-          width: 75%;
-          font-size: 21px;
           color: ${colors.secondary};
+          font-size: 21px;
           margin: 0;
         }
       `}</style>
     </>
   )
 }
-
-export default Home

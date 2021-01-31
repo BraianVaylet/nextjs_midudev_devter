@@ -1,7 +1,7 @@
-import React from "react"
+import * as React from "react"
 import PropTypes from "prop-types"
 
-const GitHub = (props) => {
+export default function GitHub(props) {
   return (
     <svg
       width={1024}
@@ -21,8 +21,5 @@ const GitHub = (props) => {
 }
 
 GitHub.propTypes = {
-  props: PropTypes.object,
   fill: PropTypes.string,
 }
-
-export default GitHub
