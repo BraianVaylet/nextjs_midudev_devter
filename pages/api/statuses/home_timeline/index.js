@@ -1,3 +1,5 @@
+// ! DATA FALSA QUE SE USO DURANTE EL MAQUETADO... YA NO SE USA...
+
 const timeline = [
   {
     id: "0",

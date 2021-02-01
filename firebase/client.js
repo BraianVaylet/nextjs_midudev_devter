@@ -12,7 +12,11 @@ const firebaseConfig = {
   measurementId: "G-THHEH1KCJS",
 }
 
-!firebase.apps.length && firebase.initializeApp(firebaseConfig)
+try {
+  !firebase.apps.length && firebase.initializeApp(firebaseConfig)
+} catch (error) {
+  console.log("error", error)
+}
 
 const db = firebase.firestore()
 

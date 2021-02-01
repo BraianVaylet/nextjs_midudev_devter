@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { DEFAULT_LANGUAGE } from "constants/locale"
 
 const DATE_UNITS = [
   ["day", 86400],
@@ -44,9 +45,16 @@ export default function useTimeAgo(timestamp) {
     return () => clearInterval(interval)
   }, [timestamp])
 
-  const rtf = new Intl.RelativeTimeFormat(navigator.language, {
-    style: "short",
-  })
+  let rtf
+  try {
+    rtf = new Intl.RelativeTimeFormat(navigator.language, {
+      style: "short",
+    })
+  } catch (error) {
+    rtf = new Intl.RelativeTimeFormat(DEFAULT_LANGUAGE, {
+      style: "short",
+    })
+  }
 
   const { value, unit } = timeago
 
